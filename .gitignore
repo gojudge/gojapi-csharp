@@ -2,7 +2,7 @@
 /*/bin
 /*/obj
 *.exe
-*.dll
+*.pdb
 *.lib
 *.so
 *.suo
