@@ -25,11 +25,14 @@ namespace gojapi_test
             JudgerTCP jdg = new JudgerTCP(host, port);
 
             Dictionary<String, String> obj = new Dictionary<String, String>();
-            obj.Add("action", "test action");
+            obj.Add("action", "login");
+            obj.Add("password", "123456789");
 
             string json = jdg.MsgPack(obj);
 
-            System.Console.WriteLine(json);
+            //System.Console.WriteLine(json);
+
+            jdg.Request(obj);
             
         }
 
