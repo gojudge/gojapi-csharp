@@ -11,13 +11,15 @@ namespace gojapi
     {
         private Socket conn = null;
         private char mark = '#';
+        private bool login = false;
+        private string judger_os = "";
 
         /// <summary>
         /// TCP方式连接
         /// </summary>
         /// <param name="host">主机名</param>
         /// <param name="port">端口</param>
-        public JudgerTCP(string host, int port) 
+        public JudgerTCP(string host, int port, string password) 
         {
             this.conn = this.ConnectSocket(host,port);
             if (this.conn == null) {
@@ -38,6 +40,16 @@ namespace gojapi
                 this.mark = header[idx];
             }
 
+            // login
+            if (this.Login(password))
+            {
+                this.login = true;
+            }
+            else
+            {
+                this.login = false;
+            }
+
         }
 
         /// <summary>
@@ -54,14 +66,10 @@ namespace gojapi
             // Get host related information.
             hostEntry = Dns.GetHostEntry(server);
 
-            // Loop through the AddressList to obtain the supported AddressFamily. This is to avoid
-            // an exception that occurs when the host IP Address is not compatible with the address family
-            // (typical in the IPv6 case).
             foreach (IPAddress address in hostEntry.AddressList)
             {
                 IPEndPoint ipe = new IPEndPoint(address, port);
-                Socket tempSocket =
-                    new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                Socket tempSocket = new Socket(ipe.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
                 tempSocket.Connect(ipe);
 
@@ -100,8 +108,7 @@ namespace gojapi
             string subContent = content.Substring(0, idx);
 
             System.Console.WriteLine(subContent);
-
-            return null;
+            return this.jsonDecode(subContent);
         }
 
         /// <summary>
@@ -165,7 +172,28 @@ namespace gojapi
         /// <returns>对象</returns>
         private Object jsonDecode(string json) 
         {
-            return null;
+            return fastJSON.JSON.Parse(json);
+        }
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="username">用户/session id</param>
+        /// <param name="password">密码</param>
+        /// <returns></returns>
+        private bool Login(string password)
+        {
+            Dictionary<String, String> obj = new Dictionary<String, String>();
+            obj.Add("action", "login");
+            obj.Add("password", password);
+
+            Object resp = this.Request(obj);
+
+            Dictionary<string, object> respDict = (Dictionary<string, object>)resp;
+            bool result =  (bool)respDict["result"];
+            this.judger_os = (string)respDict["os"];
+
+            return result;
         }
     }
 }
