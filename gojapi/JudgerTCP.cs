@@ -10,6 +10,7 @@ namespace gojapi
     public class JudgerTCP
     {
         private Socket conn = null;
+        private char mark = '#';
 
         /// <summary>
         /// TCP方式连接
@@ -22,6 +23,19 @@ namespace gojapi
             if (this.conn == null) {
                 System.Console.WriteLine("Connect Failed!");
                 return;
+            }
+            else
+            {
+                string header = this.Receive();
+                int idx = header.IndexOf(this.mark);
+
+                if(idx - 1 > 0){
+                    idx = idx - 1;
+                }else{
+                    idx = 0;
+                }
+                
+                this.mark = header[idx];
             }
 
         }
@@ -80,10 +94,12 @@ namespace gojapi
             string reqStr = this.MsgPack(req);
             Byte[] bytesSent = Encoding.ASCII.GetBytes(reqStr);
             this.conn.Send(bytesSent, bytesSent.Length, 0);
-
+            // recv
             string content = this.Receive();
+            int idx = content.IndexOf(this.mark);
+            string subContent = content.Substring(0, idx);
 
-            System.Console.WriteLine(content);
+            System.Console.WriteLine(subContent);
 
             return null;
         }
@@ -91,22 +107,31 @@ namespace gojapi
         /// <summary>
         /// 接收数据
         /// </summary>
-        /// <returns></returns>
+        /// <returns>串</returns>
         private string Receive()
         {
             // recv
-            int BUF_LEN = 256;
+            int BUF_LEN = 10;
             Byte[] bytesReceived = new Byte[BUF_LEN];
             int bytes = 0;
             string page = "";
+            string frame = "";
             while (true)
             {
                 bytes = this.conn.Receive(bytesReceived);
-                if (bytes == 0)
+                page = page + frame;
+
+                if (bytes > 0)
                 {
-                    break;
+                    // check mark
+                    frame = Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+                    int idx = frame.IndexOf(this.mark);
+                    if(idx >= 0){
+                        page = page + frame;
+                        break;
+                    }
                 }
-                page = page + Encoding.ASCII.GetString(bytesReceived, 0, bytes);
+                
             }
 
             return page;
