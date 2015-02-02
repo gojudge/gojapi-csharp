@@ -11,8 +11,8 @@ namespace gojapi_test
 
         static void Main(string[] args)
         {
-            TestJudgerHTTP("oj.duguying.net",1005);
-            TestJudgerTCP("oj.duguying.net", 1004);
+            TestJudgerHTTP("127.0.0.1",1005);
+            TestJudgerTCP("127.0.0.1", 1004);
         }
 
         static void TestJudgerHTTP(string host, int port) 
@@ -23,7 +23,9 @@ namespace gojapi_test
         static void TestJudgerTCP(string host, int port) 
         {
             JudgerTCP jdg = new JudgerTCP(host, port, "123456789");
-
+            jdg.Ping();
+            jdg.AddTask(112, "randomstring", "C", "main(void){\n  printf(&quot;hello world.\\n&quot;);\n  return 0;\n}");
+            jdg.GetStatus(112, "randomstring");
         }
 
         

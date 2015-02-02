@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Web;
 
 namespace gojapi
 {
@@ -188,6 +189,10 @@ namespace gojapi
             obj.Add("password", password);
 
             Object resp = this.Request(obj);
+            if(resp == null) 
+            {
+                return false;
+            }
 
             Dictionary<string, object> respDict = (Dictionary<string, object>)resp;
             bool result =  (bool)respDict["result"];
@@ -195,5 +200,90 @@ namespace gojapi
 
             return result;
         }
+
+        /// <summary>
+        /// 测试网络连接是否连通
+        /// </summary>
+        /// <returns></returns>
+        public bool Ping()
+        {
+            Dictionary<String, String> obj = new Dictionary<string, string>();
+            obj.Add("action", "ping");
+
+            Object resp = this.Request(obj);
+
+            if (resp == null)
+            {
+                return false;
+            }
+
+            Dictionary<string, object> respDict = (Dictionary<string, object>)resp;
+            bool result = (bool)respDict["result"];
+            string pong = (string)respDict["msg"];
+
+            if ("pong" != pong)
+            {
+                return false;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 添加判题任务
+        /// </summary>
+        /// <param name="id">题目id/全局唯一</param>
+        /// <param name="sid">会话id</param>
+        /// <param name="language">语言C/C++</param>
+        /// <param name="code">源码（htmlencode之前）</param>
+        /// <returns>judger返回内容，null失败</returns>
+        public Dictionary<string, object> AddTask(int id, string sid, string language, string code)
+        {
+            Dictionary<string, object> obj = new Dictionary<string, object>();
+            obj.Add("action", "task_add");
+            obj.Add("sid", sid);
+            obj.Add("id", id);
+            obj.Add("time", DateTime.Now);
+            obj.Add("language", language);
+
+            // htmlencode
+            code = HttpUtility.HtmlEncode(code);
+
+            obj.Add("code", code);
+
+            if (!this.login)
+            {
+                return null;
+            }
+
+            object resp = this.Request(obj);
+
+            return (Dictionary<string, object>)resp;
+        }
+
+        /// <summary>
+        /// 获取当前任务的判题状态
+        /// </summary>
+        /// <param name="id">任务id</param>
+        /// <param name="sid">连接标识sid</param>
+        /// <returns>返回内容</returns>
+        public Dictionary<string, object> GetStatus(int id, string sid)
+        {
+            Dictionary<string, object> obj = new Dictionary<string, object>();
+            obj.Add("action", "task_info");
+            obj.Add("sid", sid);
+            obj.Add("id", id);
+
+            if (!this.login)
+            {
+                return null;
+            }
+
+            object resp = this.Request(obj);
+            Dictionary<string, object> respDict = (Dictionary<string, object>)resp;
+            return respDict;
+        }
+
     }
+
 }
