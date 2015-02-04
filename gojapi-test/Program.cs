@@ -12,12 +12,14 @@ namespace gojapi_test
         static void Main(string[] args)
         {
             TestJudgerHTTP("127.0.0.1",1005);
-            TestJudgerTCP("127.0.0.1", 1004);
+            // TestJudgerTCP("127.0.0.1", 1004);
         }
 
         static void TestJudgerHTTP(string host, int port) 
         {
             JudgerHTTP jdg = new JudgerHTTP(host,port);
+
+
         }
 
         static void TestJudgerTCP(string host, int port) 

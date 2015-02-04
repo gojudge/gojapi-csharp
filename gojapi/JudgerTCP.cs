@@ -8,6 +8,9 @@ using System.Web;
 
 namespace gojapi
 {
+    /// <summary>
+    /// TCP方式通讯
+    /// </summary>
     public class JudgerTCP
     {
         private Socket conn = null;
