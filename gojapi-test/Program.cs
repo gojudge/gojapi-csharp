@@ -11,7 +11,7 @@ namespace gojapi_test
 
         static void Main(string[] args)
         {
-            TestJudgerHTTP("127.0.0.1",1005,"123456789");
+            TestJudgerHTTP("duguying.net",1005,"123456789");
             // TestJudgerTCP("127.0.0.1", 1004);
         }
 

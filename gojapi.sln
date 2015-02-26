@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gojapi", "gojapi\gojapi.csproj", "{6D1B27B3-7382-4FC1-9889-F567BBFE33C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gojapi-test", "gojapi-test\gojapi-test.csproj", "{60C417FC-54CD-417A-BFAE-697460FAD895}"

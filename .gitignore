@@ -6,3 +6,7 @@
 *.lib
 *.so
 *.suo
+
+# package
+/packages/
+/.nuget/
