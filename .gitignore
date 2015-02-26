@@ -10,3 +10,5 @@
 # package
 /packages/
 /.nuget/
+*.nuspec
+*.nupkg

@@ -6,3 +6,13 @@
 
 - gojapi
   - fastJson
+
+## nuget
+
+get artifacts from nuget
+
+[https://www.nuget.org/packages/gojapi/](https://www.nuget.org/packages/gojapi/)
+
+## License
+
+MIT License
